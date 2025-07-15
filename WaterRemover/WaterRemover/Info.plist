@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>AnekLatin-Regular.ttf</string>
+		<string>AnekLatin-Medium.ttf</string>
+		<string>AnekLatin-SemiBold.ttf</string>
+		<string>AnekLatin-Bold.ttf</string>
+		<string>LufgaBold.ttf</string>
+		<string>LufgaMedium.ttf</string>
+		<string>LufgaSemiBold.ttf</string>
+		<string>LufgaRegular.ttf</string>
+		<string>Gilroy-Bold.ttf</string>
+		<string>Gilroy-SemiBold.ttf</string>
+		<string>Gilroy-Medium.ttf</string>
+		<string>Gilroy-Regular.ttf</string>
+	</array>
+</dict>
+</plist>
