@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		F7BF7EBE2E270C8D00CD6646 /* ApphudSDK in Frameworks */ = {isa = PBXBuildFile; productRef = F7BF7EBD2E270C8D00CD6646 /* ApphudSDK */; };
+		F7BFA7502E3A00A300CD6646 /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = F7BFA74F2E3A00A300CD6646 /* AudioKit */; };
+		F7BFA9932E3A544800CD6646 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = F7BFA9922E3A544800CD6646 /* Lottie */; };
+		F7BFA9952E3A544800CD6646 /* Lottie-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = F7BFA9942E3A544800CD6646 /* Lottie-Dynamic */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,7 +43,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7BFA7502E3A00A300CD6646 /* AudioKit in Frameworks */,
+				F7BFA9952E3A544800CD6646 /* Lottie-Dynamic in Frameworks */,
 				F7BF7EBE2E270C8D00CD6646 /* ApphudSDK in Frameworks */,
+				F7BFA9932E3A544800CD6646 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +90,9 @@
 			name = WaterRemover;
 			packageProductDependencies = (
 				F7BF7EBD2E270C8D00CD6646 /* ApphudSDK */,
+				F7BFA74F2E3A00A300CD6646 /* AudioKit */,
+				F7BFA9922E3A544800CD6646 /* Lottie */,
+				F7BFA9942E3A544800CD6646 /* Lottie-Dynamic */,
 			);
 			productName = WaterRemover;
 			productReference = F7BF79CF2E2703F900CD6646 /* WaterRemover.app */;
@@ -115,6 +124,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F7BF7EBC2E270C8D00CD6646 /* XCRemoteSwiftPackageReference "ApphudSDK" */,
+				F7BFA74E2E3A00A300CD6646 /* XCRemoteSwiftPackageReference "AudioKit" */,
+				F7BFA9912E3A544800CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F7BF79D02E2703F900CD6646 /* Products */;
@@ -201,6 +212,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/WaterRemover/Info.plist";
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -260,6 +272,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/WaterRemover/Info.plist";
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -283,7 +296,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = WaterRemover;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -312,7 +325,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = WaterRemover;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -360,6 +373,22 @@
 				minimumVersion = 3.6.2;
 			};
 		};
+		F7BFA74E2E3A00A300CD6646 /* XCRemoteSwiftPackageReference "AudioKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/AudioKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.5;
+			};
+		};
+		F7BFA9912E3A544800CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -367,6 +396,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F7BF7EBC2E270C8D00CD6646 /* XCRemoteSwiftPackageReference "ApphudSDK" */;
 			productName = ApphudSDK;
+		};
+		F7BFA74F2E3A00A300CD6646 /* AudioKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F7BFA74E2E3A00A300CD6646 /* XCRemoteSwiftPackageReference "AudioKit" */;
+			productName = AudioKit;
+		};
+		F7BFA9922E3A544800CD6646 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F7BFA9912E3A544800CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+		F7BFA9942E3A544800CD6646 /* Lottie-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F7BFA9912E3A544800CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = "Lottie-Dynamic";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
