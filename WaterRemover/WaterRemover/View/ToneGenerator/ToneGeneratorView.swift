@@ -4,13 +4,14 @@ import AudioKit
 
 struct ToneGeneratorView: View {
     
+    let userDefaults = UserDefaultsManager()
+    
     @State private var selectedHZ: Int = 1 {
         didSet {
             if isActive {
-                if isActive {
-                    toneManager.updateFrequency(AUValue(selectedHZ))
-                }
+                toneManager.updateFrequency(AUValue(selectedHZ))
             }
+            userDefaults.set(selectedHZ, forKey: .selectedHZ)
         }
     }
     
@@ -87,6 +88,9 @@ struct ToneGeneratorView: View {
                 } else {
                     selectedTone = .none
                 }
+            }
+            .onAppear {
+                selectedHZ = userDefaults.getValue(forKey: .selectedHZ) ?? 1
             }
     }
     

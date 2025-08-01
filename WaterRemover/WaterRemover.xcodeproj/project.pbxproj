@@ -8,9 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		F7BF7EBE2E270C8D00CD6646 /* ApphudSDK in Frameworks */ = {isa = PBXBuildFile; productRef = F7BF7EBD2E270C8D00CD6646 /* ApphudSDK */; };
-		F7BFA7502E3A00A300CD6646 /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = F7BFA74F2E3A00A300CD6646 /* AudioKit */; };
-		F7BFA9932E3A544800CD6646 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = F7BFA9922E3A544800CD6646 /* Lottie */; };
-		F7BFA9952E3A544800CD6646 /* Lottie-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = F7BFA9942E3A544800CD6646 /* Lottie-Dynamic */; };
+		F7BFA99C2E3A57BE00CD6646 /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = F7BFA99B2E3A57BE00CD6646 /* AudioKit */; };
+		F7BFAA762E3D205700CD6646 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = F7BFAA752E3D205700CD6646 /* Lottie */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,7 +17,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		F7BF7EBF2E270D5500CD6646 /* Exceptions for "WaterRemover" folder in "WaterRemover" target */ = {
+		F7BFAA792E3D209100CD6646 /* Exceptions for "WaterRemover" folder in "WaterRemover" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -31,7 +30,7 @@
 		F7BF79D12E2703F900CD6646 /* WaterRemover */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				F7BF7EBF2E270D5500CD6646 /* Exceptions for "WaterRemover" folder in "WaterRemover" target */,
+				F7BFAA792E3D209100CD6646 /* Exceptions for "WaterRemover" folder in "WaterRemover" target */,
 			);
 			path = WaterRemover;
 			sourceTree = "<group>";
@@ -43,10 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7BFA7502E3A00A300CD6646 /* AudioKit in Frameworks */,
-				F7BFA9952E3A544800CD6646 /* Lottie-Dynamic in Frameworks */,
+				F7BFA99C2E3A57BE00CD6646 /* AudioKit in Frameworks */,
 				F7BF7EBE2E270C8D00CD6646 /* ApphudSDK in Frameworks */,
-				F7BFA9932E3A544800CD6646 /* Lottie in Frameworks */,
+				F7BFAA762E3D205700CD6646 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,9 +88,8 @@
 			name = WaterRemover;
 			packageProductDependencies = (
 				F7BF7EBD2E270C8D00CD6646 /* ApphudSDK */,
-				F7BFA74F2E3A00A300CD6646 /* AudioKit */,
-				F7BFA9922E3A544800CD6646 /* Lottie */,
-				F7BFA9942E3A544800CD6646 /* Lottie-Dynamic */,
+				F7BFA99B2E3A57BE00CD6646 /* AudioKit */,
+				F7BFAA752E3D205700CD6646 /* Lottie */,
 			);
 			productName = WaterRemover;
 			productReference = F7BF79CF2E2703F900CD6646 /* WaterRemover.app */;
@@ -124,8 +121,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F7BF7EBC2E270C8D00CD6646 /* XCRemoteSwiftPackageReference "ApphudSDK" */,
-				F7BFA74E2E3A00A300CD6646 /* XCRemoteSwiftPackageReference "AudioKit" */,
-				F7BFA9912E3A544800CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				F7BFA99A2E3A57BE00CD6646 /* XCRemoteSwiftPackageReference "AudioKit" */,
+				F7BFAA742E3D205700CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F7BF79D02E2703F900CD6646 /* Products */;
@@ -373,7 +370,7 @@
 				minimumVersion = 3.6.2;
 			};
 		};
-		F7BFA74E2E3A00A300CD6646 /* XCRemoteSwiftPackageReference "AudioKit" */ = {
+		F7BFA99A2E3A57BE00CD6646 /* XCRemoteSwiftPackageReference "AudioKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AudioKit/AudioKit.git";
 			requirement = {
@@ -381,7 +378,7 @@
 				minimumVersion = 5.6.5;
 			};
 		};
-		F7BFA9912E3A544800CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+		F7BFAA742E3D205700CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
 			requirement = {
@@ -397,20 +394,15 @@
 			package = F7BF7EBC2E270C8D00CD6646 /* XCRemoteSwiftPackageReference "ApphudSDK" */;
 			productName = ApphudSDK;
 		};
-		F7BFA74F2E3A00A300CD6646 /* AudioKit */ = {
+		F7BFA99B2E3A57BE00CD6646 /* AudioKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F7BFA74E2E3A00A300CD6646 /* XCRemoteSwiftPackageReference "AudioKit" */;
+			package = F7BFA99A2E3A57BE00CD6646 /* XCRemoteSwiftPackageReference "AudioKit" */;
 			productName = AudioKit;
 		};
-		F7BFA9922E3A544800CD6646 /* Lottie */ = {
+		F7BFAA752E3D205700CD6646 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F7BFA9912E3A544800CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			package = F7BFAA742E3D205700CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
-		};
-		F7BFA9942E3A544800CD6646 /* Lottie-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F7BFA9912E3A544800CD6646 /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = "Lottie-Dynamic";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

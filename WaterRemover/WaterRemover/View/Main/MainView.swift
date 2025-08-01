@@ -12,6 +12,9 @@ struct MainView: View {
     @State private var isPaywallView: Bool = false
     @State private var isToneGeneratorView: Bool = false
     @State private var isNoiseLevelView: Bool = false
+    @State private var isShowEmail: Bool = false
+    
+    @StateObject var qaManager = QuickActionsManager.instance
     
     var body: some View {
         
@@ -68,6 +71,17 @@ struct MainView: View {
             .fullScreenCover(isPresented: $isNoiseLevelView) {
                 NoiseLevelView()
             }
+            .onChange(of: qaManager.quickAction) { _, _ in
+                handleQAData()
+            }
+            .sheet(isPresented: $isShowEmail) {
+                MailView(
+                    recipient: Constants.contactEmail,
+                    subject: "Support",
+                    messageBody: "Hey team, I need some help..."
+                )
+                .presentationDetents([.large])
+            }
     }
     
     private func cards() -> some View {
@@ -103,6 +117,16 @@ struct MainView: View {
                     CardView(image: Image(.noise), title: "Articles", subtitle: "Know more about it")
                 }
             }
+        }
+    }
+    
+    private func handleQAData() {
+        switch qaManager.quickAction?.action {
+        case .email1, .email2:
+            isShowEmail = true
+        case .rateUs:
+            RateAppManager.shared.openAppStore()
+        case .none: break
         }
     }
     

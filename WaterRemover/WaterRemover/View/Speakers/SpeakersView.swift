@@ -2,9 +2,53 @@
 import SwiftUI
 
 struct SpeakersView: View {
-    @State private var isTopSpeaker = false
-    @State private var isBottomSpeaker = false
+    @State private var isTopSpeaker = false {
+        didSet {
+            userDefaults.set(isTopSpeaker, forKey: .topSpeaker)
+        }
+    }
+    @State private var isBottomSpeaker = false {
+        didSet {
+            userDefaults.set(isBottomSpeaker, forKey: .bottomSpeaker)
+        }
+    }
     @State private var isActive = false
+    @StateObject var speakerManager = SpeakerCheckManager()
+
+    let userDefaults = UserDefaultsManager()
+    
+    private var topSpeakerOpacity: Double {
+        if isTopSpeaker && isActive {
+            return 0
+        } else {
+            return 1
+        }
+    }
+    
+    private var topAnimationOpacity: Double {
+        if isTopSpeaker && isActive {
+            return 1
+        } else {
+            return 0
+        }
+    }
+    
+    private var bottomSpeakerOpacity: Double {
+        if isBottomSpeaker && isActive {
+            return 0
+        } else {
+            return 1
+        }
+    }
+    
+    private var bottomAnimationOpacity: Double {
+        if isBottomSpeaker && isActive {
+            return 1
+        } else {
+            return 0
+        }
+    }
+    
     var body: some View {
         LinearGradient(colors: [Color.topGradient, Color.bottomGradient], startPoint: .top, endPoint: .bottom)
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -14,11 +58,14 @@ struct SpeakersView: View {
                     HapticButton {
                         isTopSpeaker.toggle()
                     } label: {
-                        ZStack(alignment: .center) {
-                            speakerTop()
-                            LottieView(animationFileName: "speaker_animation", loopMode: .loop)
-                                .frame(width: 206, height: 206)
-                        }
+                        
+                        speakerTop()
+                            .opacity(topSpeakerOpacity)
+                            .overlay(alignment: .center) {
+                                LottieView(animationFileName: "speaker_animation", loopMode: .loop)
+                                    .frame(width: 500, height: 500)
+                                    .opacity(topAnimationOpacity)
+                            }
                     }
                     .padding(.top, 69)
 
@@ -32,6 +79,12 @@ struct SpeakersView: View {
                     } label: {
                         speakerBottom()
                             .padding(.top, 22)
+                            .opacity(bottomSpeakerOpacity)
+                            .overlay(alignment: .center) {
+                                LottieView(animationFileName: "speaker_animation", loopMode: .loop)
+                                    .frame(width: 500, height: 500)
+                                    .opacity(bottomAnimationOpacity)
+                            }
                     }
                     
                     Text("Bottom speaker")
@@ -42,6 +95,12 @@ struct SpeakersView: View {
                     
                     HapticButton {
                         //TODO Speakers check start/stop
+                        isActive.toggle()
+                        if isActive {
+                            speakerManager.start(top: isTopSpeaker, bottom: isBottomSpeaker)
+                        } else {
+                            speakerManager.stop()
+                        }
                     } label: {
                         button()
                             .padding(.bottom, 45)
@@ -58,6 +117,10 @@ struct SpeakersView: View {
                 HeaderView(title: "Speakers Check")
                     .padding(.top, 62)
                     .padding(.horizontal, 20)
+            }
+            .onAppear {
+                isTopSpeaker = userDefaults.getValue(forKey: .topSpeaker) ?? false
+                isBottomSpeaker = userDefaults.getValue(forKey: .bottomSpeaker) ?? false
             }
     }
     

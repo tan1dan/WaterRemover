@@ -9,29 +9,19 @@
 import SwiftUI
 import Charts
 
-class NoiseData: ObservableObject {
-    @Published var values: [Double] = []
-    init() {
-        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-            if self.values.count >= 20 {
-                return // стоп
-            }
-            DispatchQueue.main.async {
-                self.values.append(Double.random(in: 0...120))
-            }
-        }
-    }
-}
-
 struct ScrollableChartView: View {
-    @ObservedObject var data = NoiseData()
+    @ObservedObject var micManager: MicrophoneDBManager
+
     @State private var visibleLength: Double = 8
     @State private var visibleXStart: Double = 0
     @State private var visibleXEnd: Double = 8
     @State private var visibleYStart: Double = 0
     @State private var visibleYEnd: Double = 120
+    
+    @Binding var isActive: Bool
+    
     var body: some View {
-        let chartValues = Array(data.values.enumerated())
+        let chartValues = Array(micManager.dbValues.enumerated())
         
         VStack(alignment: .leading) {
             Text("Noise Graphic")
@@ -65,7 +55,7 @@ struct ScrollableChartView: View {
             .padding()
             .background(.white)
             .cornerRadius(24)
-            .onReceive(data.$values) { values in
+            .onReceive(micManager.$dbValues) { values in
                 let count = Double(values.count)
                 if count > 8 {
                     visibleXStart = count - 8
@@ -74,11 +64,11 @@ struct ScrollableChartView: View {
                     visibleXStart = 0
                     visibleXEnd = 8
                 }
-                
-                if count == 20 {
+            }
+            .onChange(of: isActive) { newValue in
+                if !isActive {
                     visibleXStart = 0
-                    visibleYStart = 0
-                    visibleYEnd = 120
+                    visibleXEnd = Double(micManager.count)
                 }
             }
         }

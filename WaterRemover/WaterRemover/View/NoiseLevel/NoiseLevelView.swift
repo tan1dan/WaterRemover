@@ -3,8 +3,12 @@
 import SwiftUI
 
 struct NoiseLevelView: View {
-    @State private var currentDB: CGFloat = 25
+    private var currentDB: CGFloat {
+        return CGFloat(micManager.currentDB)
+    }
     @State private var isActive: Bool = false
+    @StateObject private var micManager = MicrophoneDBManager()
+    
     
     private var progress: CGFloat {
         let minVisualTrim: CGFloat = 0.01
@@ -19,7 +23,7 @@ struct NoiseLevelView: View {
     }
     
     private var levelText: String {
-        if currentDB > 0 && currentDB < 60 {
+        if currentDB >= 0 && currentDB < 60 {
             return "Normal"
         } else if currentDB >= 60 && currentDB <= 80 {
             return "Loud"
@@ -30,7 +34,7 @@ struct NoiseLevelView: View {
     
     private var levelColor: Color {
         let color: Color
-        if currentDB > 0 && currentDB < 60 {
+        if currentDB >= 0 && currentDB < 60 {
             color = Color.customBlue
         } else if currentDB >= 60 && currentDB <= 80 {
             color = Color.orange
@@ -49,7 +53,7 @@ struct NoiseLevelView: View {
             .overlay(alignment: .bottom) {
                 //Content
                 VStack(alignment: .leading, spacing: 0) {
-                    ScrollableChartView()
+                    ScrollableChartView(micManager: micManager, isActive: $isActive)
                         .padding(.top, 80)
                     Spacer()
                     
@@ -84,6 +88,11 @@ struct NoiseLevelView: View {
             HapticButton {
                 //TODO Start pause action
                 isActive.toggle()
+                if isActive {
+                    micManager.start()
+                } else {
+                    micManager.stop()
+                }
             } label: {
                 StartStopView(isActive: $isActive)
             }

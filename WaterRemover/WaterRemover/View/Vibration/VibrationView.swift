@@ -4,16 +4,27 @@ import SwiftUI
 struct VibrationView: View {
     
     @State private var selectedLevel: PerfectSyncSlider.Level = .light
-    @State private var selectedVibration: VibrationType = .first
+    
+    @State private var selectedVibration: VibrationType = .first {
+        didSet {
+            userDefaults.set(selectedVibration.rawValue, forKey: .vibrationType)
+        }
+    }
+    
     @State private var isActive: Bool = false
+    @State private var isDone: Bool = false
     
     @State private var vibrationManager = VibrationManager()
+    @StateObject private var vibrationAudioManager = VibrationAudioManager()
     
-    private var progress: CGFloat = 1
+    @State private  var progress: CGFloat = 1
+    @State private var timer: Timer?
     
     private let rectangleHeight: CGFloat = 3
     private let rectangleSpacing: CGFloat = 3
     private let vibrationTypeWidth: CGFloat = 114
+    
+    private let userDefaults = UserDefaultsManager()
     
     var body: some View {
         LinearGradient(colors: [Color.topGradient, Color.bottomGradient], startPoint: .top, endPoint: .bottom)
@@ -59,13 +70,17 @@ struct VibrationView: View {
                     .padding(.horizontal, 20)
             }
             .overlay(alignment: .top) {
-                HapticButton {
-                    //TODO Remove water button
-                } label: {
-                    mainButton()
-                        .padding(.top, 84 + 62)
-                }
+                mainButton()
+                    .padding(.top, 84 + 62)
             }
+            .onAppear {
+                let selectedLevelRaw = userDefaults.getValue(forKey: .vibrationLevel) ?? -1
+                let selectedVibrationRaw = userDefaults.getValue(forKey: .vibrationType) ?? ""
+                
+                selectedLevel = PerfectSyncSlider.Level(rawValue: selectedLevelRaw) ?? .light
+                selectedVibration = VibrationType(rawValue: selectedVibrationRaw) ?? .first
+            }
+            
     }
     
     private func levelTitles() -> some View {
@@ -92,38 +107,7 @@ struct VibrationView: View {
             
             HapticButton {
                 //TODO Start pause action
-                isActive.toggle()
-                if isActive {
-                    var vibrationType: Int
-                    var vibrationLevel: Int
-                    
-                    switch selectedVibration {
-                    case .first:
-                        vibrationType = 0
-                    case .second:
-                        vibrationType = 1
-                    case .third:
-                        vibrationType = 2
-                    case .fourth:
-                        vibrationType = 3
-                    case .fifth:
-                        vibrationType = 4
-                    case .sixth:
-                        vibrationType = 5
-                    }
-                    
-                    switch selectedLevel {
-                    case .light:
-                        vibrationLevel = 0
-                    case .medium:
-                        vibrationLevel = 1
-                    case .hard:
-                        vibrationLevel = 2
-                    }
-                    vibrationManager.start(type: vibrationType, level: vibrationLevel)
-                } else {
-                    vibrationManager.stop()
-                }
+                startStopAction()
             } label: {
                 StartStopView(isActive: $isActive)
                     
@@ -132,6 +116,58 @@ struct VibrationView: View {
             Spacer()
         }
     }
+    
+    private func startStopAction() {
+        isActive.toggle()
+        isDone = false
+        
+        if isActive {
+            var vibrationType: Int
+            var vibrationLevel: Int
+
+            switch selectedVibration {
+            case .first: vibrationType = 0
+            case .second: vibrationType = 1
+            case .third: vibrationType = 2
+            case .fourth: vibrationType = 3
+            case .fifth: vibrationType = 4
+            case .sixth: vibrationType = 5
+            }
+
+            switch selectedLevel {
+            case .light: vibrationLevel = 0
+            case .medium: vibrationLevel = 1
+            case .hard: vibrationLevel = 2
+            }
+
+            vibrationManager.start(type: vibrationType, level: vibrationLevel)
+            vibrationAudioManager.start(level: vibrationLevel)
+
+            progress = 0
+            timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+                if progress < 1.0 {
+                    progress += 0.002
+                } else {
+                    isDone = true
+                    stopAll()
+                }
+            }
+
+        } else {
+            stopAll()
+        }
+    }
+
+    
+    private func stopAll() {
+        isActive = false
+        progress = 1
+        vibrationManager.stop()
+        vibrationAudioManager.stop()
+        timer?.invalidate()
+        timer = nil
+    }
+
     
     private func mainButton() -> some View {
         ZStack(alignment: .center) {
@@ -149,13 +185,46 @@ struct VibrationView: View {
             
             // Текст
             VStack(spacing: 5) {
-                Image(.waterDrop)
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                Text("Remove\nwater")
-                    .foregroundStyle(Color.customBlue)
-                    .font(.gilroy(size: 34, weight: .bold))
-                    .multilineTextAlignment(.center)
+                if !isActive {
+                    if !isDone {
+                        Image(.waterDrop)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                        Text("Remove\nwater")
+                            .foregroundStyle(Color.customBlue)
+                            .font(.gilroy(size: 34, weight: .bold))
+                            .multilineTextAlignment(.center)
+                    } else {
+                        Text("Done !")
+                            .foregroundStyle(Color.customBlue)
+                            .font(.gilroy(size: 34, weight: .bold))
+                            .multilineTextAlignment(.center)
+                        Text("Device is cleared")
+                            .foregroundStyle(Color.customBlue.opacity(0.5))
+                            .font(.gilroy(size: 16, weight: .medium))
+                            .multilineTextAlignment(.center)
+                    }
+                } else {
+                    if !isDone {
+                        Text("\(Int(Double(progress * 100).rounded()))%")
+                            .foregroundStyle(Color.customBlue)
+                            .font(.gilroy(size: 64, weight: .bold))
+                            .multilineTextAlignment(.center)
+                        Text("Removing ...")
+                            .foregroundStyle(Color.customBlue.opacity(0.5))
+                            .font(.gilroy(size: 16, weight: .medium))
+                            .multilineTextAlignment(.center)
+                    } else {
+                        Text("Done !")
+                            .foregroundStyle(Color.customBlue)
+                            .font(.gilroy(size: 34, weight: .bold))
+                            .multilineTextAlignment(.center)
+                        Text("Device is cleared")
+                            .foregroundStyle(Color.customBlue.opacity(0.5))
+                            .font(.gilroy(size: 16, weight: .medium))
+                            .multilineTextAlignment(.center)
+                    }
+                }
             }
         }
         .frame(width: 206, height: 206)

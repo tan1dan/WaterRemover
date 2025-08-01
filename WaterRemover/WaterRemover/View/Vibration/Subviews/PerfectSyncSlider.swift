@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct PerfectSyncSlider: View {
-    enum Level: Int, CaseIterable {
+    enum Level: Int, CaseIterable, Identifiable {
         case light = 0, medium, hard
         
         var label: String {
@@ -12,9 +12,17 @@ struct PerfectSyncSlider: View {
             case .hard: return "Hard"
             }
         }
+        
+        var id: String { String(rawValue) }
     }
     
-    @Binding var selectedLevel: Level
+    let userDefaults = UserDefaultsManager()
+    
+    @Binding var selectedLevel: Level {
+        didSet {
+            userDefaults.set(selectedLevel.rawValue, forKey: .vibrationLevel)
+        }
+    }
     @State private var dragPosition: CGFloat = 0 // 0...1 normalized
     
     var body: some View {
