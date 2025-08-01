@@ -29,4 +29,9 @@ struct UserDefaultsManager {
 enum UserDefaultsKey: String {
     case onboardingCompleted
     case freeTranlationsCompleted
+    case vibrationLevel
+    case vibrationType
+    case topSpeaker
+    case bottomSpeaker
+    case selectedHZ
 }

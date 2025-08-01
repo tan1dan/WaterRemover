@@ -7,18 +7,18 @@ struct HeaderView: View {
     var body: some View {
         ZStack(alignment: .center) {
             Text(title)
-//                .foregroundStyle(.settingsTitle)
-                .font(.lufga(size: 24, weight: .semibold))
+                .foregroundStyle(.white)
+                .font(.gilroy(size: 24, weight: .bold))
             HStack {
-                Spacer()
+                
                 HapticButton {
                     dismiss()
                 } label: {
-//                    Image(.close)
-//                        .resizable()
-//                        .frame(width: 14, height: 14)
+                    Image(.arrowLeft)
+                        .resizable()
+                        .frame(width: 24, height: 24)
                 }
-
+                Spacer()
             }
         }
     }

@@ -11,20 +11,20 @@ enum OnboardingPage: String, CaseIterable, Hashable, Identifiable {
 
     var title: String {
         switch self {
-        case .first: "Choose Countries\n& Radio Stations"
-        case .second: "Identify the Song\nPlaying Now"
-        case .third: "Set Widgets\nof Radio Stations"
-        case .fourth: "Use Dark Theme\nfor Your Comfort"
-        case .fifth: "Start to Continue\nRadio App"
+        case .first: "Vibration Modes\n& Intensity Control"
+        case .second: "Separate Speaker\nEasy Testing"
+        case .third: "Noise Level\nSmart Controller"
+        case .fourth: "Tone Generator\nwith Ready Options"
+        case .fifth: "Start to Continue\nWater Remover"
         }
     }
     
     var description: String {
         switch self {
-        case .first: "Find the stations you like, listen\nand add to your favorites"
-        case .second: "Use Shazam to recognise the\nsong from radio cast"
-        case .third: "Listen to music and get quick\naccess to app with widgets"
-        case .fourth: "Try light and dark modes to\nchoose more convenient option"
+        case .first: "Сhange the power and frequency of\nvibration to better clean the device"
+        case .second: "Check top and bottom speakers to\nunderstand if them work correctly"
+        case .third: "Measure the noise around you to find\nout if it is dangerous for your health"
+        case .fourth: "Use the tone generator to clean your\ndevice or repel rodents and insects"
         case .fifth: paywallSubtitle()
         }
     }

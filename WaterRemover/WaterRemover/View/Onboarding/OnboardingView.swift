@@ -17,29 +17,84 @@ struct OnboardingView: View {
     // MARK: - Body
 
     var body: some View {
+        scrollPages()
+        .overlay(alignment: .topTrailing) {
+            ZStack(alignment: .topTrailing) {
+                Color.clear
+
+                if isCloseVisible {
+                    HapticButton(
+                        action: {
+                            setOnbiardingPassed()
+                            appState.view = .main
+                        },
+                        label: {
+                            Image(.closeButton)
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                        }
+                    )
+                    .padding(.top, 67)
+                    .padding(.trailing, 20)
+                }
+            }
+            .ignoresSafeArea()
+        }
+        .overlay(alignment: .topLeading) {
+            ZStack(alignment: .topLeading) {
+                Color.clear
+                if page == .fifth {
+                    HapticButton {
+                        Task {
+                            await apphud.restore()
+                            
+                            if apphud.isSubscribed {
+                                setOnbiardingPassed()
+                                appState.view = .main
+                            }
+                        }
+                    } label: {
+                        Text("Restore")
+                            .frame(width: 60, height: 22)
+                            .font(.gilroy(size: 12, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
+                    
+                    .padding(.top, 67)
+                    .padding(.leading, 20)
+                }
+            }
+            .ignoresSafeArea()
+        }
+        .onChange(of: page) { _, page in
+            if page == .second {
+                if ApphudManager.shared.onboardingPaywall?.config.isReviewEnabled == true {
+                    RateAppManager.shared.requestReview()
+                }
+            } else if page == .fifth {
+                Task {
+                    let closeAppearDelay = ApphudManager.shared.onboardingPaywall?.config.onboardingCloseDelay ?? 0
+
+                    try await Task.sleep(for: .seconds(closeAppearDelay))
+
+                    isCloseVisible = true
+                }
+            } else {
+                isCloseVisible = false
+            }
+        }
+    }
+}
+
+// MARK: - Private methods
+
+extension OnboardingView {
+    
+    private func scrollPages() -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 0) {
                 ForEach(OnboardingPage.allCases) { page in
-                    Image(page.image)
-                        .resizable()
-                        .ignoresSafeArea()
-                        .scaledToFill()
-                        .frame(
-                            width: UIScreen.main.bounds.width,
-                            //                            height: UIScreen.main.bounds.height
-                        )
-                        .id(page)
-                        .overlay(alignment: .bottom) {
-                            overlayContent(from: page)
-                                .frame(height: 369)
-                                .frame(in: .local) { frame in
-                                    contentHeight = frame.height
-                                }
-                                .background(.obBackground)
-                                .clipShape(.rect(cornerRadius: 30))
-                                .shadow(color: .black.opacity(0.15), radius: 15, x: 0, y: -4)
-                        }
-                        .ignoresSafeArea()
+                    pageContent(page: page)
                 }
             }
             .scrollTargetLayout()
@@ -49,53 +104,72 @@ struct OnboardingView: View {
         .scrollPosition(id: $page, anchor: .center)
         .animation(.easeInOut, value: page)
         .overlay(alignment: .bottom) {
-            if apphud.onboardingPaywall?.config.isPagingEnabled == true {
+//            if apphud.onboardingPaywall?.config.isPagingEnabled == true {
                 dotsView()
-                .padding(.bottom, page != .fifth ? safeArea.bottom + 130 : safeArea.bottom + 150)
-            }
-        }
-        .onChange(of: page) { _, page in
-            if page == .second {
-                if ApphudManager.shared.onboardingPaywall?.config.isReviewEnabled == true {
-                    RateAppManager.shared.requestReview()
-                }
-            }
+                .padding(.bottom, 150)
+//            }
         }
     }
-}
-
-// MARK: - Private methods
-
-extension OnboardingView {
+    
+    private func pageContent(page: OnboardingPage) -> some View {
+        GeometryReader { proxy in
+            Image(page.image)
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+                .frame(width: proxy.size.width + 2)
+                .clipped()
+                .id(page)
+                .overlay(alignment: .bottom) {
+                    overlayContent(from: page)
+                        .frame(height: 400)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.background)
+                        .clipShape(DipShape(dipRadius: 100, dipWidth: proxy.size.width, isInverted: false))
+                        .shadow(color: .black.opacity(0.05), radius: 15, x: 0, y: -1)
+                }
+                .ignoresSafeArea()
+        }
+        .frame(width: UIScreen.main.bounds.width)
+    }
+    
+    
 
     private func overlayContent(from page: OnboardingPage) -> some View {
         VStack(spacing: 0) {
-            titles(from: page)
-                .padding(.top, 35)
-                .padding(.horizontal, 12)
-
-            mainButton(from: page)
-                .padding(.top, 47)
-                .padding(.horizontal, 23)
-                .padding(.bottom, 20)
-
-            if page == .fifth {
-                bottomLinks()
-                    .padding(.horizontal, 35.5)
+            HStack {
+                Spacer()
+                titles(from: page)
+                    .padding(.top, 60)
+                    .padding(.horizontal, 12)
+                Spacer()
             }
             Spacer()
+        }
+        .overlay(alignment: .bottom) {
+            if page == .fifth {
+                bottomLinks()
+                    .frame(height: 41)
+                    .fixedSize()
+                    .padding(.bottom, 30)
+            }
+        }
+        .overlay(alignment: .top) {
+            mainButton(from: page)
+                .padding(.top, 60 + 142 + 47)
+                .padding(.horizontal, 23)
         }
     }
 
     private func titles(from page: OnboardingPage) -> some View {
         VStack(spacing: 12) {
             Text(page.title)
-                .font(.lufga(size:35, weight: .semibold))
-                .foregroundStyle(.obTitle)
+                .font(.gilroy(size: 35, weight: .bold))
+                .foregroundStyle(Color.customBlack)
 
             Text(page.description)
-                .font(.lufga(size: 18, weight: .semibold))
-                .foregroundStyle(.obTitle.opacity(0.5))
+                .font(.gilroy(size: 18, weight: .medium))
+                .foregroundStyle(Color.customBlack.opacity(0.5))
                 .opacity(apphud.onboardingPaywallDescriptionAlpha)
         }
         .multilineTextAlignment(.center)
@@ -118,7 +192,6 @@ extension OnboardingView {
                             return
                         }
 
-
                         setOnbiardingPassed()
                         appState.view = .main
                     }
@@ -129,7 +202,7 @@ extension OnboardingView {
                     Text(
                         getButtonTitle(page: page)
                     )
-                    .font(.lufga(size: 18, weight: .semibold))
+                    .font(.gilroy(size: 18, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
 
@@ -144,14 +217,14 @@ extension OnboardingView {
                     {
                         if !subtitle.isEmpty {
                             Text(subtitle)
-                                .font(.lufga(size: 12, weight: .medium))
+                                .font(.gilroy(size: 18, weight: .medium))
                                 .foregroundStyle(.white)
                                 .opacity(0.5)
                         }
                     }
                 }
                 .frame(height: 54)
-                .background(.obMainButtonBackground)
+                .background(.customBlue)
                 .clipShape(RoundedRectangle(cornerRadius: 30))
             }
         )
@@ -182,27 +255,15 @@ extension OnboardingView {
         return HStack(spacing: 7) {
             ForEach(obCases) { page in
                 Capsule()
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: self.page == page
-                            ? [.obMainButtonBackground]
-                            : [.obTitle.opacity(0.1)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                    .foregroundStyle(self.page == page
+                                     ? Color.customBlue
+                                     : .gray.opacity(0.3))
                     .frame(width: 7, height: 7)
             }
             Capsule()
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: self.page == .fifth
-                        ? [.obMainButtonBackground]
-                        : [.obTitle.opacity(0.1)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .foregroundStyle(self.page == .fifth
+                                 ? Color.customBlue
+                                 : .gray.opacity(0.3))
                 .frame(width: self.page != .fifth ? 5.4 : 7, height: self.page != .fifth ? 5.4 : 7)
             Capsule()
                 .foregroundStyle(.gray.opacity(0.3))
@@ -213,58 +274,39 @@ extension OnboardingView {
     }
 
     private func bottomLinks() -> some View {
-        HStack(spacing: 40) {
-            HapticButton(
-                action: {
-                    open(url: URL(string: Constants.privacy)!)
-                },
-                label: {
-                    Text("Privacy")
-                        .font(.anekLatin(size: 14, weight: .regular))
-                        .foregroundStyle(.obTitle.opacity(0.5))
-                }
-            )
-            
-            HapticButton(
-                action: {
-                    open(url: URL(string: Constants.terms)!)
-                },
-                label: {
-                    Text("Terms")
-                        .font(.anekLatin(size: 14, weight: .regular))
-                        .foregroundStyle(.obTitle.opacity(0.5))
-                }
-            )
-            
-            HapticButton(
-                action: {
-                    Task {
-                        await apphud.restore()
-                        
-                        if apphud.isSubscribed {
-                            setOnbiardingPassed()
-                            appState.view = .main
-                        }
+        VStack(spacing: 0) {
+            Text("By continuing, you agree to")
+                .font(.gilroy(size: 12, weight: .medium))
+                .foregroundStyle(.text.opacity(0.2))
+
+            HStack(alignment: .center, spacing: 0) {
+                HapticButton(
+                    action: {
+                        open(url: URL(string: Constants.terms)!)
+                    },
+                    label: {
+                        Text("Terms of Service")
+                            .font(.gilroy(size: 12, weight: .bold))
+                            .foregroundStyle(.text.opacity(0.5))
                     }
-                },
-                label: {
-                    Text("Restore")
-                        .font(.anekLatin(size: 14, weight: .regular))
-                        .foregroundStyle(.obTitle.opacity(0.5))
-                }
-            )
-            
-            HapticButton(
-                action: {
-                    setOnbiardingPassed()
-                    appState.view = .main
-                },
-                label: {
-                    Text("Close")
-                        .font(.anekLatin(size: 14, weight: .regular))
-                        .foregroundStyle(.obTitle.opacity(0.5))
-                }
-            )
+                )
+                
+                Text(" and ")
+                    .font(.gilroy(size: 12, weight: .medium))
+                    .foregroundStyle(.text.opacity(0.2))
+
+                HapticButton(
+                    action: {
+                        open(url: URL(string: Constants.privacy)!)
+                    },
+                    label: {
+                        Text("Privacy Policy")
+                            .font(.gilroy(size: 12, weight: .bold))
+                            .foregroundStyle(.text.opacity(0.5))
+                    }
+                )
+
+            }
         }
     }
 
