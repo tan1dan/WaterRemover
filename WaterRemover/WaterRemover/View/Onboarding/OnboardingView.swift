@@ -11,7 +11,7 @@ struct OnboardingView: View {
     @State private var contentHeight: CGFloat = 0
     @State private var isCloseVisible: Bool = false
 
-    private let apphud: ApphudManager = .shared
+    @StateObject private var apphud = ApphudManager.shared
     
     let isConfigEmpty = ApphudManager.shared.isPaywallConfigEmpty
     // MARK: - Body
@@ -21,7 +21,6 @@ struct OnboardingView: View {
         .overlay(alignment: .topTrailing) {
             ZStack(alignment: .topTrailing) {
                 Color.clear
-
                 if isCloseVisible {
                     HapticButton(
                         action: {
@@ -104,10 +103,10 @@ extension OnboardingView {
         .scrollPosition(id: $page, anchor: .center)
         .animation(.easeInOut, value: page)
         .overlay(alignment: .bottom) {
-//            if apphud.onboardingPaywall?.config.isPagingEnabled == true {
+            if apphud.onboardingPaywall?.config.isPagingEnabled == true {
                 dotsView()
                 .padding(.bottom, 150)
-//            }
+            }
         }
     }
     

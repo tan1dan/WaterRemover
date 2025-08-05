@@ -13,6 +13,7 @@ struct VibrationView: View {
     
     @State private var isActive: Bool = false
     @State private var isDone: Bool = false
+    @State private var isPaywall: Bool = false
     
     @State private var vibrationManager = VibrationManager()
     @StateObject private var vibrationAudioManager = VibrationAudioManager()
@@ -25,6 +26,7 @@ struct VibrationView: View {
     private let vibrationTypeWidth: CGFloat = 114
     
     private let userDefaults = UserDefaultsManager()
+    private let apphud = ApphudManager.shared
     
     var body: some View {
         LinearGradient(colors: [Color.topGradient, Color.bottomGradient], startPoint: .top, endPoint: .bottom)
@@ -73,6 +75,9 @@ struct VibrationView: View {
                 mainButton()
                     .padding(.top, 84 + 62)
             }
+            .fullScreenCover(isPresented: $isPaywall) {
+                PaywallView()
+            }
             .onAppear {
                 let selectedLevelRaw = userDefaults.getValue(forKey: .vibrationLevel) ?? -1
                 let selectedVibrationRaw = userDefaults.getValue(forKey: .vibrationType) ?? ""
@@ -107,7 +112,11 @@ struct VibrationView: View {
             
             HapticButton {
                 //TODO Start pause action
-                startStopAction()
+                if apphud.isSubscribed {
+                    startStopAction()
+                } else {
+                    isPaywall = true
+                }
             } label: {
                 StartStopView(isActive: $isActive)
                     

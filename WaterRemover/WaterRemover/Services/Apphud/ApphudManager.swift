@@ -5,7 +5,7 @@ import StoreKit
 
 import ApphudSDK
 
-final class ApphudManager {
+final class ApphudManager: ObservableObject {
 
 	// MARK: - Properties
 
@@ -42,9 +42,9 @@ final class ApphudManager {
                 Apphud.start(apiKey: Constants.apphudKey)
             }
 
-            updateSubscribedStatus()
+            await updateSubscribedStatus()
 			await fetchProducts()
-			updateSubscribedStatus()
+            await updateSubscribedStatus()
 		}
 	}
 
@@ -52,7 +52,7 @@ final class ApphudManager {
 
 	func restore() async {
 		await Apphud.restorePurchases()
-		updateSubscribedStatus()
+        await updateSubscribedStatus()
 	}
 
 	func purchase(apphudProduct: ApphudProduct) async -> Bool {
@@ -62,7 +62,7 @@ final class ApphudManager {
 //		return true
 //#else
 		let _ = await Apphud.purchase(apphudProduct)
-		updateSubscribedStatus()
+        await updateSubscribedStatus()
 
 		return isSubscribed
 //#endif
@@ -231,7 +231,7 @@ final class ApphudManager {
     }
 
 	// MARK: - Private methods
-
+    @MainActor
 	private func updateSubscribedStatus() {
 		isSubscribed = Apphud.hasActiveSubscription()
 		print(">>> isSubscribed \(isSubscribed)")

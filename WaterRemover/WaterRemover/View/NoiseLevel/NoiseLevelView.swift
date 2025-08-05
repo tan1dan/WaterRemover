@@ -3,12 +3,17 @@
 import SwiftUI
 
 struct NoiseLevelView: View {
+    
     private var currentDB: CGFloat {
         return CGFloat(micManager.currentDB)
     }
-    @State private var isActive: Bool = false
-    @StateObject private var micManager = MicrophoneDBManager()
     
+    @State private var isActive: Bool = false
+    @State private var isPaywall: Bool = false
+    
+    @StateObject private var micManager = MicrophoneDBManager()
+    private let userDefaults = UserDefaultsManager.shared
+    private let apphud = ApphudManager.shared
     
     private var progress: CGFloat {
         let minVisualTrim: CGFloat = 0.01
@@ -44,6 +49,12 @@ struct NoiseLevelView: View {
         return color.opacity(0.5)
     }
     
+    private var freeTranslationCount: Int {
+        userDefaults.getValue(forKey: .freeTranlationsCompleted) ?? 0
+    }
+    
+    let freeAccessCount: Int = 1
+    
     private let vibrationTypeWidth: CGFloat = 114
     
     var body: some View {
@@ -74,10 +85,11 @@ struct NoiseLevelView: View {
                     .padding(.horizontal, 20)
             }
             .overlay(alignment: .top) {
-                
                 mainButton()
                     .padding(.top, 84 + 62)
-                
+            }
+            .fullScreenCover(isPresented: $isPaywall) {
+                PaywallView()
             }
     }
     
@@ -87,17 +99,31 @@ struct NoiseLevelView: View {
             
             HapticButton {
                 //TODO Start pause action
-                isActive.toggle()
-                if isActive {
-                    micManager.start()
+                
+                if apphud.isSubscribed || freeTranslationCount <= freeAccessCount {
+                    if freeTranslationCount <= freeAccessCount {
+                        var count = freeTranslationCount
+                        count+=1
+                        userDefaults.set(count, forKey: .freeTranlationsCompleted)
+                    }
+                    startStopAction()
                 } else {
-                    micManager.stop()
+                    isPaywall = true
                 }
             } label: {
                 StartStopView(isActive: $isActive)
             }
             
             Spacer()
+        }
+    }
+    
+    private func startStopAction() {
+        isActive.toggle()
+        if isActive {
+            micManager.start()
+        } else {
+            micManager.stop()
         }
     }
     

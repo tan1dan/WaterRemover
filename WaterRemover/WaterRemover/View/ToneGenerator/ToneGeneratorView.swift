@@ -17,6 +17,7 @@ struct ToneGeneratorView: View {
     
     @State private var selectedTone: ToneType = .none
     @State private var isActive: Bool = false
+    @State private var isPaywall: Bool = false
     
     @StateObject private var toneManager = ToneGeneratorManager()
     
@@ -25,6 +26,8 @@ struct ToneGeneratorView: View {
     }
     
     private let vibrationTypeWidth: CGFloat = 114
+    
+    private let apphud = ApphudManager.shared
     
     var body: some View {
         LinearGradient(colors: [Color.topGradient, Color.bottomGradient], startPoint: .top, endPoint: .bottom)
@@ -37,8 +40,10 @@ struct ToneGeneratorView: View {
                         .font(.gilroy(size: 16, weight: .bold))
                         .padding(.top, 80)
                         .foregroundStyle(Color.text)
+                        
                     CustomSlider(value: $selectedHZ, minValue: 1, maxValue: 30000)
                         .padding(.top, 11)
+                        
                     levelTitles()
                         .padding(.top, 15)
                     Text("Use against")
@@ -71,6 +76,9 @@ struct ToneGeneratorView: View {
                 mainButton()
                     .padding(.top, 84 + 62)
                 
+            }
+            .fullScreenCover(isPresented: $isPaywall) {
+                PaywallView()
             }
             .onChange(of: selectedHZ) { oldValue, newValue in
                 if selectedHZ == 15 {
@@ -114,17 +122,25 @@ struct ToneGeneratorView: View {
             
             HapticButton {
                 //TODO Start pause action
-                isActive.toggle()
-                if isActive {
-                    toneManager.startTone(frequency: AUValue(selectedHZ))
+                if apphud.isSubscribed {
+                    startStopAction()
                 } else {
-                    toneManager.stopTone()
+                    isPaywall = true
                 }
             } label: {
                 StartStopView(isActive: $isActive)
             }
             
             Spacer()
+        }
+    }
+    
+    private func startStopAction() {
+        isActive.toggle()
+        if isActive {
+            toneManager.startTone(frequency: AUValue(selectedHZ))
+        } else {
+            toneManager.stopTone()
         }
     }
     

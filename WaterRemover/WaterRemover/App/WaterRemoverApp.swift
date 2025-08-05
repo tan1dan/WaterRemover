@@ -6,7 +6,7 @@ struct WaterRemoverApp: App {
     @StateObject private var actualView: AppState = AppState()
 
     private let userDefaults: UserDefaultsManager = .shared
-    private let apphud: ApphudManager = .shared
+    @StateObject private var apphud: ApphudManager = .shared
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.scenePhase) var scenePhase

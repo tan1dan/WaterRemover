@@ -55,7 +55,7 @@ struct OfferView: View {
             }
             Spacer()
         }
-        .frame(height: 132)
+        .frame(height: 135)
         .background(isChoosing ? Color.customBlue : Color.text.opacity(0.05))
         .clipShape(.rect(cornerRadius: 20))
         .overlay(
