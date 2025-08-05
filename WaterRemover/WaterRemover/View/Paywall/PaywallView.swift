@@ -11,7 +11,7 @@ struct PaywallView: View {
     
     private let apphud: ApphudManager = .shared
     
-    @State private var selectedChoice: Choice = .first
+    @State private var selectedChoice: Choice = .second
     @State private var selectedProduct: ApphudProduct?
     @State private var showOverlay = false
     @State private var showBottomLinks = false
@@ -23,6 +23,7 @@ struct PaywallView: View {
             Image(.paywallBG)
                 .resizable()
                 .scaledToFill()
+                .scaleEffect(1.01)
                 .frame(
                     width: UIScreen.main.bounds.width,
                     height: UIScreen.main.bounds.height
@@ -31,7 +32,7 @@ struct PaywallView: View {
             VStack(spacing: 0) {
                 Spacer()
                 content()
-                    .frame(height: 522)
+                    .frame(height: UIScreen.main.bounds.height * (2/3) - 10)
                     .ignoresSafeArea()
                     .background(Color.background)
                     .clipShape(DipShape(dipRadius: 100, dipWidth: UIScreen.main.bounds.width, isInverted: false))
@@ -95,6 +96,7 @@ struct PaywallView: View {
 
                 isCloseVisible = true
             }
+            selectedProduct = apphud.inAppPaywall?.products[2]
         }
         .navigationBarBackButtonHidden(true)
     }
@@ -104,47 +106,10 @@ struct PaywallView: View {
             VStack(spacing: 20) {
                 titles()
                     .padding(.top, 60)
+                offers()
+                    .padding(.horizontal, 16.5)
+                    .padding(.top, 5)
                 
-                HStack(spacing: 5) {
-                    if let product = apphud.inAppPaywall?.products[0] {
-                        HapticButton {
-                            selectedProduct = product
-                            selectedChoice = .first
-                        } label: {
-                            OfferView(
-                                badgeTitle: "POPULAR",
-                                product: product,
-                                isChoosing: selectedChoice == .first
-                            )
-                        }
-                    }
-                    
-                    if let product = apphud.inAppPaywall?.products[1] {
-                        HapticButton {
-                            selectedProduct = product
-                            selectedChoice = .second
-                        } label: {
-                            OfferView(
-                                badgeTitle: "MOST TAKEN",
-                                product: product,
-                                isChoosing: selectedChoice == .second
-                            )
-                        }
-                    }
-                    
-                    if let product = apphud.inAppPaywall?.products[2] {
-                        HapticButton {
-                            selectedProduct = product
-                            selectedChoice = .third
-                        } label: {
-                            OfferView(
-                                badgeTitle: "BEST DEAL",
-                                product: product,
-                                isChoosing: selectedChoice == .third
-                            )
-                        }
-                    }
-                }
             }
             Spacer()
         }
@@ -153,12 +118,12 @@ struct PaywallView: View {
                 bottomLinks()
                     .frame(height: 41)
                     .fixedSize()
-                    .padding(.bottom, 30)
+                    .padding(.bottom, 40)
             }
         }
         .overlay(alignment: .bottom) {
             purchaseButton()
-                .padding(.bottom, 30 + 41 + 20)
+                .padding(.bottom, 40 + 41 + 20)
                 .padding(.horizontal, 23)
         }
     }
@@ -187,11 +152,56 @@ struct PaywallView: View {
         }
     }
     
+    private func offers() -> some View {
+        HStack(spacing: 6) {
+            if let product = apphud.inAppPaywall?.products[0] {
+                HapticButton {
+                    selectedProduct = product
+                    selectedChoice = .first
+                } label: {
+                    OfferView(
+                        badgeTitle: "POPULAR",
+                        product: product,
+                        isChoosing: selectedChoice == .first
+                    )
+                }
+            }
+            
+            if let product = apphud.inAppPaywall?.products[1] {
+                HapticButton {
+                    selectedProduct = product
+                    selectedChoice = .second
+                } label: {
+                    OfferView(
+                        badgeTitle: "MOST TAKEN",
+                        product: product,
+                        isChoosing: selectedChoice == .second
+                    )
+                }
+            }
+            
+            if let product = apphud.inAppPaywall?.products[2] {
+                HapticButton {
+                    selectedProduct = product
+                    selectedChoice = .third
+                } label: {
+                    OfferView(
+                        badgeTitle: "BEST DEAL",
+                        product: product,
+                        isChoosing: selectedChoice == .third
+                    )
+                }
+            }
+        }
+        
+    }
+    
     private func purchaseButton() -> some View {
         HapticButton {
             if let selectedProduct {
                 Task {
                     await apphud.purchase(apphudProduct: selectedProduct)
+                    dismiss()
                 }
             }
         } label: {
