@@ -15,7 +15,9 @@ struct CircularTicksView: View {
     let tickHeight: CGFloat = 14
     let tickWidth: CGFloat = 2
     let tickOffset: CGFloat = 45
-    let circleRadius: CGFloat = 80
+    var circleRadius: CGFloat {
+        isScreenBig ? 80 : 60
+    }
 
     var body: some View {
         GeometryReader { geo in
@@ -37,12 +39,12 @@ struct CircularTicksView: View {
 
                 // Подписи
                 LabelAtAngle(text: "0", angle: 210 - 90, radius: circleRadius + tickOffset + 10, center: center)
-                LabelAtAngle(text: "60", angle: 0 - 90, radius: circleRadius + tickOffset + 12, center: center)
+                LabelAtAngle(text: "60", angle: 0 - 90, radius: circleRadius + tickOffset + (isScreenBig ? 12 : 8), center: center)
                 LabelAtAngle(text: "120", angle: 150 - 90, radius: circleRadius + tickOffset + 12, center: center)
             }
-            .frame(width: 320, height: 320)
+            .frame(width: isScreenBig ? 320 : 280, height: isScreenBig ? 320 : 280)
         }
-        .frame(width: 320, height: 320) // чуть больше, чтобы тики не обрезались
+        .frame(width: isScreenBig ? 320 : 280, height: isScreenBig ? 320 : 280) // чуть больше, чтобы тики не обрезались
     }
 }
 

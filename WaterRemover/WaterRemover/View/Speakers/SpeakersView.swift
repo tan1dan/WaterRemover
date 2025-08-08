@@ -107,7 +107,7 @@ struct SpeakersView: View {
                             .padding(.horizontal, 87)
                     }
                 }
-                .frame(height: UIScreen.main.bounds.height - 100)
+                .frame(height: isScreenBig ? UIScreen.main.bounds.height - 100 : UIScreen.main.bounds.height - 50)
                 .frame(maxWidth: .infinity)
                 .background(Color.background)
                 .clipShape(Constants.highDipShape)
@@ -115,7 +115,7 @@ struct SpeakersView: View {
             }
             .overlay(alignment: .top) {
                 HeaderView(title: "Speakers Check")
-                    .padding(.top, 62)
+                    .padding(.top, paddingHeaderTop)
                     .padding(.horizontal, 20)
             }
             .onAppear {
@@ -140,24 +140,24 @@ struct SpeakersView: View {
     private func speakerTop() -> some View {
         ZStack(alignment: .center) {
             Circle()
-                .frame(width: 206, height: 206)
+                .frame(width: isScreenBig ? 206 : 186, height: isScreenBig ? 206 : 186)
                 .foregroundStyle(isTopSpeaker ? .customBlue : .white)
             
             Image(.speaker)
                 .resizable()
-                .frame(width: 164, height: 164)
+                .frame(width: isScreenBig ? 164 : 154, height: isScreenBig ? 164 : 154)
         }
     }
     
     private func speakerBottom() -> some View {
         ZStack(alignment: .center) {
             Circle()
-                .frame(width: 206, height: 206)
+                .frame(width: isScreenBig ? 206 : 186, height: isScreenBig ? 206 : 186)
                 .foregroundStyle(isBottomSpeaker ? .customBlue : .white)
             
             Image(.speaker)
                 .resizable()
-                .frame(width: 164, height: 164)
+                .frame(width: isScreenBig ? 164 : 154, height: isScreenBig ? 164 : 154)
         }
     }
 }

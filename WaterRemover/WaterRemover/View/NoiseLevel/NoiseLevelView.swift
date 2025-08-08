@@ -57,6 +57,7 @@ struct NoiseLevelView: View {
     
     private let vibrationTypeWidth: CGFloat = 114
     
+    
     var body: some View {
         LinearGradient(colors: [Color.topGradient, Color.bottomGradient], startPoint: .top, endPoint: .bottom)
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -73,7 +74,7 @@ struct NoiseLevelView: View {
 
                 }
                 .padding(.horizontal, 20)
-                .frame(height: UIScreen.main.bounds.height / 1.8)
+                .frame(height: isScreenBig ? UIScreen.main.bounds.height / 1.8 : 430)
                 .frame(maxWidth: .infinity)
                 .background(Color.background)
                 .clipShape(Constants.lowDipShape)
@@ -81,12 +82,12 @@ struct NoiseLevelView: View {
             }
             .overlay(alignment: .top) {
                 HeaderView(title: "Noise Level")
-                    .padding(.top, 62)
+                    .padding(.top, paddingHeaderTop)
                     .padding(.horizontal, 20)
             }
             .overlay(alignment: .top) {
                 mainButton()
-                    .padding(.top, 84 + 62)
+                    .padding(.top, isScreenBig ? 84 + paddingHeaderTop : 64 + paddingHeaderTop)
             }
             .fullScreenCover(isPresented: $isPaywall) {
                 PaywallView()
@@ -153,7 +154,7 @@ struct NoiseLevelView: View {
                     .multilineTextAlignment(.center)
             }
         }
-        .frame(width: 206, height: 206)
+        .frame(width: isScreenBig ? 206 : 166, height: isScreenBig ? 206 : 166)
         .background(Color.white)
         .clipShape(Circle())
         .overlay(alignment: .center) {

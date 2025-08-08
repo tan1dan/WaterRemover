@@ -15,7 +15,7 @@ struct OnboardingView: View {
     
     let isConfigEmpty = ApphudManager.shared.isPaywallConfigEmpty
     // MARK: - Body
-
+    
     var body: some View {
         scrollPages()
         .overlay(alignment: .topTrailing) {
@@ -33,7 +33,7 @@ struct OnboardingView: View {
                                 .frame(width: 25, height: 25)
                         }
                     )
-                    .padding(.top, 67)
+                    .padding(.top, isScreenBig ? 67 : 25)
                     .padding(.trailing, 20)
                 }
             }
@@ -59,7 +59,7 @@ struct OnboardingView: View {
                             .foregroundStyle(.white)
                     }
                     
-                    .padding(.top, 67)
+                    .padding(.top, isScreenBig ? 67 : 25)
                     .padding(.leading, 20)
                 }
             }
@@ -105,7 +105,7 @@ extension OnboardingView {
         .overlay(alignment: .bottom) {
             if apphud.onboardingPaywall?.config.isPagingEnabled == true {
                 dotsView()
-                .padding(.bottom, 150)
+                .padding(.bottom, isScreenBig ? 150 : 140)
             }
         }
     }
@@ -114,20 +114,21 @@ extension OnboardingView {
         GeometryReader { proxy in
             Image(page.image)
                 .resizable()
+                
                 .scaledToFill()
-                .ignoresSafeArea()
-                .frame(width: proxy.size.width + 2)
+                .scaleEffect(1.02)
                 .clipped()
                 .id(page)
                 .overlay(alignment: .bottom) {
                     overlayContent(from: page)
-                        .frame(height: 400)
-                        .frame(maxWidth: .infinity)
+                        .frame(width: proxy.size.width, height: isScreenBig ? 400 : 500)
+                        
                         .background(Color.background)
                         .clipShape(DipShape(dipRadius: 100, dipWidth: proxy.size.width, isInverted: false))
                         .shadow(color: .black.opacity(0.05), radius: 15, x: 0, y: -1)
                 }
                 .ignoresSafeArea()
+                
         }
         .frame(width: UIScreen.main.bounds.width)
     }
@@ -150,12 +151,12 @@ extension OnboardingView {
                 bottomLinks()
                     .frame(height: 41)
                     .fixedSize()
-                    .padding(.bottom, 30)
+                    .padding(.bottom, isScreenBig ? 30 : smallScreenBottom + 5)
             }
         }
-        .overlay(alignment: .top) {
+        .overlay(alignment: .bottom) {
             mainButton(from: page)
-                .padding(.top, 60 + 142 + 47)
+                .padding(.bottom, isScreenBig ? 57 + 34 : smallScreenBottom + 57)
                 .padding(.horizontal, 23)
         }
     }
