@@ -3,6 +3,19 @@ import SwiftUI
 
 extension View {
 
+   
+    var smallScreenBottom: CGFloat {
+        145
+    }
+    
+    var isScreenBig: Bool {
+        UIScreen.main.bounds.height > 700
+    }
+    
+   var paddingHeaderTop: CGFloat {
+        UIScreen.main.bounds.height > 700 ? 62 : 20
+    }
+    
     var screenSize: CGRect {
         UIScreen.main.bounds
     }

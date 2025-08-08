@@ -68,12 +68,12 @@ struct VibrationView: View {
             }
             .overlay(alignment: .top) {
                 HeaderView(title: "Water Remover")
-                    .padding(.top, 62)
+                    .padding(.top, paddingHeaderTop)
                     .padding(.horizontal, 20)
             }
             .overlay(alignment: .top) {
                 mainButton()
-                    .padding(.top, 84 + 62)
+                    .padding(.top, isScreenBig ? 84 + paddingHeaderTop : 64 + paddingHeaderTop)
             }
             .fullScreenCover(isPresented: $isPaywall) {
                 PaywallView()

@@ -19,7 +19,7 @@ struct ArticleView: View {
                         .padding(.horizontal, 20)
                    Spacer()
                }
-                .frame(height: UIScreen.main.bounds.height - 100)
+                .frame(height: isScreenBig ? UIScreen.main.bounds.height - 100 : UIScreen.main.bounds.height - 50)
                 .frame(maxWidth: .infinity)
                 .background(Color.background)
                 .clipShape(Constants.highDipShape)
@@ -27,7 +27,7 @@ struct ArticleView: View {
             }
             .overlay(alignment: .top) {
                 HeaderView(title: title)
-                    .padding(.top, 62)
+                    .padding(.top, paddingHeaderTop)
                     .padding(.horizontal, 20)
             }
     }

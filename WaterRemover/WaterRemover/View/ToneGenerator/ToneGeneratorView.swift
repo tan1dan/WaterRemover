@@ -39,17 +39,21 @@ struct ToneGeneratorView: View {
                     Text("Frequency")
                         .font(.gilroy(size: 16, weight: .bold))
                         .padding(.top, 80)
+                        .padding(.leading, isScreenBig ? 20 : 20)
                         .foregroundStyle(Color.text)
                         
                     CustomSlider(value: $selectedHZ, minValue: 1, maxValue: 30000)
                         .padding(.top, 11)
+                        .padding(.horizontal, isScreenBig ? 20 : 20)
                         
                     levelTitles()
                         .padding(.top, 15)
+                        .padding(.horizontal, isScreenBig ? 20 : 20)
                     Text("Use against")
                         .font(.gilroy(size: 16, weight: .bold))
                         .foregroundStyle(Color.text)
                         .padding(.top, 22)
+                        .padding(.leading, isScreenBig ? 20 : 20)
                     
                     vibrationTypes()
                         .padding(.top, 11)
@@ -59,8 +63,7 @@ struct ToneGeneratorView: View {
                         .padding(.bottom, 45)
 
                 }
-                .padding(.horizontal, 20)
-                .frame(height: UIScreen.main.bounds.height / 1.8)
+                .frame(height: isScreenBig ? UIScreen.main.bounds.height / 1.8 : 430)
                 .frame(maxWidth: .infinity)
                 .background(Color.background)
                 .clipShape(Constants.lowDipShape)
@@ -68,13 +71,13 @@ struct ToneGeneratorView: View {
             }
             .overlay(alignment: .top) {
                 HeaderView(title: "Tone Generator")
-                    .padding(.top, 62)
+                    .padding(.top, paddingHeaderTop)
                     .padding(.horizontal, 20)
             }
             .overlay(alignment: .top) {
                 
                 mainButton()
-                    .padding(.top, 84 + 62)
+                    .padding(.top, isScreenBig ? 84 + paddingHeaderTop : 64 + paddingHeaderTop)
                 
             }
             .fullScreenCover(isPresented: $isPaywall) {
@@ -162,11 +165,11 @@ struct ToneGeneratorView: View {
             VStack(spacing: 0) {
                 Text("\(selectedHZ) HZ")
                     .foregroundStyle(Color.customBlue)
-                    .font(.gilroy(size: 34, weight: .bold))
+                    .font(.gilroy(size: isScreenBig ? 34 : 32, weight: .bold))
                     .multilineTextAlignment(.center)
             }
         }
-        .frame(width: 206, height: 206)
+        .frame(width: isScreenBig ? 206 : 180, height: isScreenBig ? 206 : 180)
         .background(Color.white)
         .clipShape(Circle())
     }

@@ -14,7 +14,7 @@ struct MainView: View {
     @State private var isNoiseLevelView: Bool = false
     @State private var isShowEmail: Bool = false
     
-    @StateObject var qaManager = QuickActionsManager.instance
+    @StateObject var qaManager = QuickActionsManager.instance    
     
     var body: some View {
         
@@ -29,8 +29,8 @@ struct MainView: View {
                     Spacer()
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, -80)
-                .frame(height: UIScreen.main.bounds.height / 1.8)
+                .padding(.top, -70)
+                .frame(height: isScreenBig ? UIScreen.main.bounds.height / 1.8 : 430)
                 .frame(maxWidth: .infinity)
                 .background(Color.background)
                 .clipShape(Constants.lowDipShape)
@@ -38,7 +38,7 @@ struct MainView: View {
             }
             .overlay(alignment: .top) {
                 HeaderMainView(isSettings: $isSettingsView, isPaywall: $isPaywallView)
-                    .padding(.top, 62)
+                    .padding(.top, paddingHeaderTop)
                     .padding(.horizontal, 20)
             }
             .overlay(alignment: .top) {
@@ -47,7 +47,7 @@ struct MainView: View {
                     isVibrationView = true
                 } label: {
                     mainButton()
-                        .padding(.top, 84 + 62)
+                        .padding(.top, isScreenBig ? 84 + paddingHeaderTop : 64 + paddingHeaderTop)
                 }
             }
             .fullScreenCover(isPresented: $isSpeakersView) {
@@ -151,14 +151,14 @@ struct MainView: View {
                     .frame(width: 24, height: 24)
                 Text("Remove\nwater")
                     .foregroundStyle(Color.customBlue)
-                    .font(.gilroy(size: 34, weight: .bold))
+                    .font(.gilroy(size: isScreenBig ? 34 : 32, weight: .bold))
                     .multilineTextAlignment(.center)
                 Text("Tap to start")
                     .foregroundStyle(Color.customBlue.opacity(0.5))
                     .font(.gilroy(size: 16, weight: .medium))
             }
         }
-        .frame(width: 206, height: 206)
+        .frame(width: isScreenBig ? 206 : 180, height: isScreenBig ? 206 : 180)
         .background(Color.white)
         .clipShape(Circle())
     }

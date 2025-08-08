@@ -9,13 +9,14 @@ struct PaywallView: View {
         case first, second, third, none
     }
     
-    private let apphud: ApphudManager = .shared
+    @StateObject private var apphud: ApphudManager = .shared
     
     @State private var selectedChoice: Choice = .second
     @State private var selectedProduct: ApphudProduct?
     @State private var showOverlay = false
     @State private var showBottomLinks = false
     @State private var isCloseVisible: Bool = false
+    
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -32,7 +33,7 @@ struct PaywallView: View {
             VStack(spacing: 0) {
                 Spacer()
                 content()
-                    .frame(height: UIScreen.main.bounds.height * (2/3) - 10)
+                    .frame(height: isScreenBig ? UIScreen.main.bounds.height * (2/3) - 10 : 500)
                     .ignoresSafeArea()
                     .background(Color.background)
                     .clipShape(DipShape(dipRadius: 100, dipWidth: UIScreen.main.bounds.width, isInverted: false))
@@ -54,7 +55,7 @@ struct PaywallView: View {
                                 .frame(width: 20, height: 20)
                         }
                     )
-                    .padding(.top, 67)
+                    .padding(.top, isScreenBig ? 67 : 25)
                     .padding(.trailing, 20)
                 }
             }
@@ -75,7 +76,7 @@ struct PaywallView: View {
                         .foregroundStyle(.white)
                 }
                 
-                .padding(.top, 67)
+                .padding(.top, isScreenBig ? 67 : 25)
                 .padding(.leading, 20)
                 
             }
@@ -96,7 +97,8 @@ struct PaywallView: View {
 
                 isCloseVisible = true
             }
-            selectedProduct = apphud.inAppPaywall?.products[2]
+            
+            selectedProduct = apphud.inAppPaywall?.products[1]
         }
         .navigationBarBackButtonHidden(true)
     }
@@ -118,12 +120,12 @@ struct PaywallView: View {
                 bottomLinks()
                     .frame(height: 41)
                     .fixedSize()
-                    .padding(.bottom, 40)
+                    .padding(.bottom, isScreenBig ? 40 : 10)
             }
         }
         .overlay(alignment: .bottom) {
             purchaseButton()
-                .padding(.bottom, 40 + 41 + 20)
+                .padding(.bottom, isScreenBig ? 40 + 41 + 20 : 10 + 41 + 10)
                 .padding(.horizontal, 23)
         }
     }
@@ -201,7 +203,9 @@ struct PaywallView: View {
             if let selectedProduct {
                 Task {
                     await apphud.purchase(apphudProduct: selectedProduct)
-                    dismiss()
+                    if apphud.isSubscribed {
+                        dismiss()
+                    }
                 }
             }
         } label: {

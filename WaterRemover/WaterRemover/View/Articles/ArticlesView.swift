@@ -26,7 +26,7 @@ struct ArticlesView: View {
                         .padding(.top, Constants.topPadding)
                    Spacer()
                }
-                .frame(height: UIScreen.main.bounds.height - 100)
+                .frame(height: isScreenBig ? UIScreen.main.bounds.height - 100 : UIScreen.main.bounds.height - 50)
                 .frame(maxWidth: .infinity)
                 .background(Color.background)
                 .clipShape(Constants.highDipShape)
@@ -34,7 +34,7 @@ struct ArticlesView: View {
             }
             .overlay(alignment: .top) {
                 HeaderView(title: "Articles")
-                    .padding(.top, 62)
+                    .padding(.top, paddingHeaderTop)
                     .padding(.horizontal, 20)
             }
             .fullScreenCover(item: $indexOfArticle) { indexItem in

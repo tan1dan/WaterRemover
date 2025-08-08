@@ -278,13 +278,13 @@ final class ApphudManager: ObservableObject {
             return
         }
 
-		var description = "Start to Continue AI Translator"
+		var description = "Take care about your speakers with"
 		if
 			let trialDays = trialDays(apphudProduct: apphudProduct),
 			let price = priceString(apphudProduct: apphudProduct)
 		{
             description += "\n"
-			description += "With \(trialDays)-days free trial and \(price) per week"
+			description += "\(trialDays)-days free trial and \(price) per week"
 		}
 
 		onboardingPaywallDescription = description
