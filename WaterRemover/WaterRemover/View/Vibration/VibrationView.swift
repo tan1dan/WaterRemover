@@ -76,7 +76,7 @@ struct VibrationView: View {
                     .padding(.top, isScreenBig ? 84 + paddingHeaderTop : 64 + paddingHeaderTop)
             }
             .fullScreenCover(isPresented: $isPaywall) {
-                PaywallView()
+                OnboardingPaywallView()
             }
             .onAppear {
                 let selectedLevelRaw = userDefaults.getValue(forKey: .vibrationLevel) ?? -1

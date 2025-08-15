@@ -63,7 +63,7 @@ struct MainView: View {
                 VibrationView()
             }
             .fullScreenCover(isPresented: $isPaywallView) {
-                PaywallView()
+               OnboardingPaywallView()
             }
             .fullScreenCover(isPresented: $isToneGeneratorView) {
                 ToneGeneratorView()

@@ -1,23 +1,32 @@
+//
+//  OnboardingView 2.swift
+//  WaterRemover
+//
+//  Created by Иван Знак on 15/08/2025.
+//
+
+
 
 import SwiftUI
 
-struct OnboardingView: View {
+struct OnboardingPaywallView: View {
 
     // MARK: - Properties
-
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appState: AppState
 
-    @State private var page: OnboardingPage? = .first
+    @State private var page: OnboardingPage = .fifth
     @State private var contentHeight: CGFloat = 0
     @State private var isCloseVisible: Bool = false
-
+    
     @StateObject private var apphud = ApphudManager.shared
+    
     
     let isConfigEmpty = ApphudManager.shared.isPaywallConfigEmpty
     // MARK: - Body
     
     var body: some View {
-        scrollPages()
+        pageContent(page: page)
         .overlay(alignment: .topTrailing) {
             ZStack(alignment: .topTrailing) {
                 Color.clear
@@ -25,8 +34,7 @@ struct OnboardingView: View {
                     HapticButton(
                         action: {
                             
-                            setOnbiardingPassed()
-                            appState.view = .main
+                            dismiss()
                             
                         },
                         label: {
@@ -67,56 +75,29 @@ struct OnboardingView: View {
             }
             .ignoresSafeArea()
         }
-        .onChange(of: page) { _, page in
-            if page == .second {
-                if ApphudManager.shared.onboardingPaywall?.config.isReviewEnabled == true {
-                    RateAppManager.shared.requestReview()
-                }
-            } else if page == .fifth {
-                Task {
-                    let closeAppearDelay = ApphudManager.shared.onboardingPaywall?.config.onboardingCloseDelay ?? 0
-
-                    try await Task.sleep(for: .seconds(closeAppearDelay))
-
-                    isCloseVisible = true
-                }
-            } else {
-                isCloseVisible = false
+        .onAppear {
+            
+            Task {
+                let closeAppearDelay = ApphudManager.shared.onboardingPaywall?.config.onboardingCloseDelay ?? 0
+                
+                try await Task.sleep(for: .seconds(closeAppearDelay))
+                
+                isCloseVisible = true
             }
+            
         }
     }
 }
 
 // MARK: - Private methods
 
-extension OnboardingView {
+extension OnboardingPaywallView {
     
-    private func scrollPages() -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 0) {
-                ForEach(OnboardingPage.allCases) { page in
-                    pageContent(page: page)
-                }
-            }
-            .scrollTargetLayout()
-        }
-        .scrollDisabled(true)
-        .scrollTargetBehavior(.viewAligned)
-        .scrollPosition(id: $page, anchor: .center)
-        .animation(.easeInOut, value: page)
-        .overlay(alignment: .bottom) {
-            if apphud.onboardingPaywall?.config.isPagingEnabled == true {
-                dotsView()
-                .padding(.bottom, isScreenBig ? 150 : 140)
-            }
-        }
-    }
     
     private func pageContent(page: OnboardingPage) -> some View {
         GeometryReader { proxy in
             Image(page.image)
                 .resizable()
-                
                 .scaledToFill()
                 .scaleEffect(1.02)
                 .clipped()
@@ -242,7 +223,7 @@ extension OnboardingView {
                 : nil,
                 config: apphud.onboardingPaywall?.config
             ) else {
-                return "Next"
+                return "Continue"
             }
             if page == .fifth {
                 return title

@@ -81,7 +81,7 @@ struct ToneGeneratorView: View {
                 
             }
             .fullScreenCover(isPresented: $isPaywall) {
-                PaywallView()
+                OnboardingPaywallView()
             }
             .onChange(of: selectedHZ) { oldValue, newValue in
                 if selectedHZ == 15 {

@@ -91,9 +91,9 @@ final class ApphudManager: ObservableObject {
 				let apphudProduct,
 				apphudProduct.isTrial
 			{
-				"Try free trial, then \(price)/week"
+				"Try free trial, then \(price)"
 			} else {
-				"Subscribe for \(price)/week"
+				"Subscribe for \(price)"
 			}
 		} else { nil }
 	}
@@ -233,7 +233,12 @@ final class ApphudManager: ObservableObject {
 	// MARK: - Private methods
     @MainActor
 	private func updateSubscribedStatus() {
-		isSubscribed = Apphud.hasActiveSubscription()
+        
+        let hasPremium = Apphud.nonRenewingPurchases()?.contains { purchase in
+            purchase.productId == "com.water.remover.app.premium"
+        }
+        isSubscribed = hasPremium ?? false
+//		isSubscribed = Apphud.hasActiveSubscription()
 		print(">>> isSubscribed \(isSubscribed)")
 	}
 
@@ -284,7 +289,7 @@ final class ApphudManager: ObservableObject {
 			let price = priceString(apphudProduct: apphudProduct)
 		{
             description += "\n"
-			description += "\(trialDays)-days free trial and \(price) per week"
+			description += "\(trialDays)-days free trial and \(price)"
 		}
 
 		onboardingPaywallDescription = description

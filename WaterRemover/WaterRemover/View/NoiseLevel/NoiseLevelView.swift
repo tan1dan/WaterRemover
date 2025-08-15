@@ -90,7 +90,7 @@ struct NoiseLevelView: View {
                     .padding(.top, isScreenBig ? 84 + paddingHeaderTop : 64 + paddingHeaderTop)
             }
             .fullScreenCover(isPresented: $isPaywall) {
-                PaywallView()
+                OnboardingPaywallView()
             }
     }
     
